@@ -1,32 +1,40 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-main style="max-width:100vw; max-height: 100vh;">
+      <router-view/>
+    </v-main>
+    <v-snackbar bottom color="rgba(0,0,0,0)" elevation="0" v-model="error">
+      <v-alert type="error">
+        {{errorText}}
+      </v-alert>
+    </v-snackbar>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { mapMutations } from 'vuex';
 
-nav {
-  padding: 30px;
+export default {
+  name: 'App',
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+  data: () => ({
+    //
+  }),
+  computed: {
+    error:{
+      get(){
+        return this.$store.state.errorAlert
+      },
+      set(value){
+        this.setErrorAlert(value)
+      }
+    },
+    errorText(){
+      return this.$store.state.errorAlertText
     }
+  },
+  methods:{
+    ...mapMutations(['setErrorAlert'])
   }
-}
-</style>
+};
+</script>
