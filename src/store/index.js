@@ -10,10 +10,29 @@ export default new Vuex.Store({
     errorAlert: false,
     errorAlertText: '',
     token: '',
+    nextTravel: {}
   },
   getters: {
   },
   mutations: {
+    setNextTravel(state, payload){
+      state.nextTravel = payload
+    },
+    travelNext(state){
+      state.nextTravel.index ++
+    },
+    reset(state){
+      const defaultState = {
+        errorAlert: false,
+        errorAlertText: '',
+        token: '',
+      }
+
+      state.errorAlert = defaultState.errorAlert
+      state.errorAlertText = defaultState.errorAlertText
+      state.token = defaultState.token
+      
+    },
     setErrorAlert(state, payload){
       state.errorAlert = payload
     },

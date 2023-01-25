@@ -9,6 +9,10 @@ import socketIO from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 import i18n from './i18n'
 
+import Fragment from 'vue-fragment'
+Vue.use(Fragment.Plugin)
+
+
 const SocketInstance = socketIO.connect(process.env.VUE_APP_API)
 Vue.use(new VueSocketIO({
   debug: true,

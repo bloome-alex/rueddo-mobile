@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DriverAppView from '../views/DriverAppView.vue'
+import NextTravel from '@/views/NextTravel.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/app',
     name: 'app',
     component: DriverAppView
+  },
+  {
+    path: '/next-travel',
+    name: 'next-travel',
+    component: NextTravel
   }
 ]
 

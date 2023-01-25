@@ -21,7 +21,7 @@
         <v-tabs-items v-model="tab">
             <v-tab-item v-for="item in items" :key="item">
                 <v-card width="100%" height="400" v-if="item === 'Ubicación'">
-                    <google-maps :originLat="originLat" :originLng="originLng" :destinationLat="destinationLat" :destinationLng="destinationLng"/>
+                    <google-maps :origin="{lat: originLat, lng: originLng}" :destinations="destinations"/>
                 </v-card>
                 <v-card width="100%" height="400" v-if="item === 'Detalles del viaje'">
                     <v-card-text>
@@ -49,16 +49,16 @@
                                     <v-icon>question_answer</v-icon><b>Mensaje (opcional): </b>{{ originMessage }}<br/><br/>
                                 </v-expansion-panel-content>
                             </v-expansion-panel>
-                            <v-expansion-panel>
+                            <v-expansion-panel v-for="(destination, index) in destinations" :key="index">
                                 <v-expansion-panel-header>
-                                    Detalles del destino
+                                    Detalles del destino ({{alphabet[index]}})
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
-                                    <v-icon>place</v-icon><b>Dirección: </b>{{ destinationAddress }}<br/><br/>
-                                    <v-icon>home</v-icon><b>Piso / Dto: </b>{{ destinationFloor }}<br/><br/>
-                                    <v-icon>contact_page</v-icon><b>Contacto: </b>{{ destinationContact }}<br/><br/>
-                                    <v-icon>phone</v-icon><b>Telefono: </b>{{ destinationPhone }}<br/><br/>
-                                    <v-icon>question_answer</v-icon><b>Mensaje (opcional): </b>{{ destinationMessage }}<br/><br/>
+                                    <v-icon>place</v-icon><b>Dirección: </b>{{ destination.address }}<br/><br/>
+                                    <v-icon>home</v-icon><b>Piso / Dto: </b>{{ destination.floor }}<br/><br/>
+                                    <v-icon>contact_page</v-icon><b>Contacto: </b>{{ destination.contact }}<br/><br/>
+                                    <v-icon>phone</v-icon><b>Telefono: </b>{{ destination.phone }}<br/><br/>
+                                    <v-icon>question_answer</v-icon><b>Mensaje (opcional): </b>{{ destination.message }}<br/><br/>
                                 </v-expansion-panel-content>
                             </v-expansion-panel>
                         </v-expansion-panels>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import {GoogleMaps} from '../googlemaps'
 
 export default {
@@ -93,10 +94,10 @@ export default {
     },
     data(){
         return{
+            alphabet: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
             originLat: this.travel.origin.lat,
             originLng: this.travel.origin.lng,
-            destinationLat: this.travel.destinations[0].lng,
-            destinationLng: this.travel.destinations[0].lat,
+            destinations: this.travel.destinations,
             origin: this.travel.origin.address,
             destination: this.travel.destinations[0].address,
             date: this.travel.delivery, 
@@ -124,7 +125,7 @@ export default {
         }
     },
     mounted(){
-        console.log('googlemaps: ', GoogleMaps)
+        console.log('travel: ', this.travel)
     },
     computed: {
         inputModel: {
@@ -137,10 +138,25 @@ export default {
         }
     },
     methods: {
-    acceptTravel(){
-        this.$socket.emit('accept_travel')
-        this.inputModel = false
-      }
+        ...mapMutations(['setNextTravel']),
+        acceptTravel(){
+            this.$socket.emit('accept_travel')
+            this.inputModel = false
+            this.setNextTravel({
+                origin: {
+                    lat: this.originLat,
+                    lng: this.originLng,
+                    address: this.originAddress,
+                    floor: this.originFloor,
+                    contact: this.originContact,
+                    phone: this.originPhone,
+                    message: this.originMessage
+                },
+                destinations: this.destinations,
+                index: 0
+            })
+            this.$router.push('/next-travel')
+        }
     }
 }
 </script>
