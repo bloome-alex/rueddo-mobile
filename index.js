@@ -5,7 +5,7 @@ const express = require('express')
 const app = express()
 
 app.use((req, res, next) => {
-    const allowedOrigins = ['https://rueddo-api-production.up.railway.app/', 'https://rueddo-vuelder-production.up.railway.app', 'https://rueddo-mobile-production.up.railway.app'];
+    const allowedOrigins = ['https://rueddo-api-production.up.railway.app', 'https://rueddo-vuelder-production.up.railway.app', 'https://rueddo-mobile-production.up.railway.app'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
